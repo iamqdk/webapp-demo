@@ -1,22 +1,46 @@
-name: My First Workflow
+name: WebappDemo-WorkFlow
 
 on: 
   push:
     branches: 
       - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  AZURE_WEBAPP_NAME: WebappDemoKqd
+  AZURE_WEBAPP_PACKAGE_PATH: './WebappDemo/publish'
+  DOTNET_VERSION: '8.x'
+  SOLUTION_PATH: 'WebappDemo/WebappDemo.sln'
+  API_PROJECT_PATH: 'WebappDemo'
+  PUBLISH_DIR: './publish'
 
 jobs:
-  MyFirstJob:
-    runs-on: ubuntu-latest
-    
+  build-and-test:
+    name: Build and Test
+    runs-on: windows-latest 
+
     steps:
-      - run: echo "👋 Hello World!"
-      
-      - name: Checkout
-        uses: actions/checkout@v4 
-      
-      - name: List files in repository
-        run: |
-          echo "The repository ${{ github.repository }} contains th efollowing files:"
-          tree
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
+
+      - name: Build
+        run: dotnet build ${{ env.SOLUTION_PATH }}
+            --configuration Release
+            --no-restore
+
+      - name: Test
+        run: dotnet test ${{ env.SOLUTION_PATH }}
+            --configuration Release
+            --no-restore
+            --no-build
+            --verbosity normal
       
