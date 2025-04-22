@@ -15,7 +15,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
+//
 app.MapGet("/sum", (int x, int y) => MathHelper.Sum(x, y));
 
 app.Run();
