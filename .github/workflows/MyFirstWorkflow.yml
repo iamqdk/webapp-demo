@@ -56,6 +56,11 @@ jobs:
             name: webapp
             path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
+      - name: List files in repository
+        run: |
+          echo "The repository ${{ github.repository }} contains th efollowing files:"
+          tree
+          
   deploy:
     name: Deploy to Azure
     runs-on: windows-latest
